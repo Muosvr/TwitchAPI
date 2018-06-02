@@ -1,3 +1,18 @@
+h1{
+    text-align: center;
+    margin-top: 0px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    background: #4b367c;
+    color: white;
+}
 li{
-    list-style-type:none;
+    text-align: center;
+    list-style-type: none;
+    margin: 20px;
+    border: 2px solid black;
+    width: 400px;
+    padding:5px;
+    margin-left: auto;
+    margin-right: auto;
 }

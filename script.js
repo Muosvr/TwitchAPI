@@ -2,38 +2,54 @@ var defaultUsers = ["dreamhackcs", "skyzhar", "freecodecamp",
 "faceittv", "comster404", "brunofin", "terakilobyte", "robotcaleb",
 "sheevergaming", "esl_sc2", "ogamingsc2", "jacksofamerica"];
 var responseObjArray = [];
+var acctStatusCheckArray = [];
 var domain = "https://api.twitch.tv/kraken/";
 
 function onloadScript(){
-
   for(i=0; i<defaultUsers.length; i++){
   callAPI(domain, "streams", defaultUsers[i], handler);
   }
-
 }
 
 function handler(value, response){
   pushValue(response);
   displayListItem(value, response);
+  callAPI(domain, "users", value, acctStatusChecker);
 }
+
+function acctStatusChecker(value,response){
+  acctStatusCheckArray.push(response);
+  if(response.error == "Not Found"){
+    var listItem = document.getElementById(value)
+    listItem.innerHTML = value +": account does not exist"
+    listItem.setAttribute("class","inactive");
+  } 
+  console.log("acctStatusCheckerObj: "+ response)
+}
+
 
 function displayListItem(value, response){
   var list = document.getElementById("streamingList")
-   if(response.stream == null){
       var listItem = document.createElement("LI");
       var listLink = document.createElement("A");
-      listItem.textContent = value+": stream not live";
+      var listStatus = document.createElement("P");
+      
+      listItem.setAttribute("id",value);
+      
+   if(response.stream == null){
+      listItem.textContent = value+": stream not active";
+      
       // listLink.setAttribute("href", arrayToDisplay[i].display_name);
       listItem.appendChild(listLink);
       list.appendChild(listItem);
       // console.log("has value");
     }else{
-      var listItem = document.createElement("LI");
-      var listLink = document.createElement("A");
-      // listItem.textContent = value+": stream live";
+      listItem.textContent = value+": ";
       listLink.setAttribute("href", response.stream.channel.url);
-      listLink.textContent = value+": stream live"
+      listStatus.innerHTML = response.stream.channel.status;
+      listLink.innerHTML = "live"
       listItem.appendChild(listLink);
+      listItem.appendChild(listStatus);
       list.appendChild(listItem);
       
     }
@@ -47,7 +63,7 @@ function pushValue(value){
 function callAPI(domain,key,value,callBack){
   
   var url = domain + key +"/"+value;
-  console.log(url);
+  // console.log(url);
   
     fetch(url, {
     method: 'GET', // or 'PUT'
@@ -59,8 +75,8 @@ function callAPI(domain,key,value,callBack){
     .catch(error => console.error('Error:', error))
     .then(function(response){
       // responseObjArray.push(response);
-      handler(value,response);
-      console.log('Success:', response);
+      callBack(value,response);
+      // console.log('Success:', response);
       return "final message";
     }
   );
