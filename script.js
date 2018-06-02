@@ -23,6 +23,7 @@ function acctStatusChecker(value,response){
     var listItem = document.getElementById(value)
     listItem.innerHTML = value +": account does not exist"
     listItem.setAttribute("class","inactive");
+    listItem.setAttribute("sortOrder", 0);
   } 
   console.log("acctStatusCheckerObj: "+ response)
 }
@@ -41,7 +42,9 @@ function displayListItem(value, response){
       
       // listLink.setAttribute("href", arrayToDisplay[i].display_name);
       listItem.appendChild(listLink);
+      listItem.setAttribute("sortOrder", 1);
       list.appendChild(listItem);
+      
       // console.log("has value");
     }else{
       listItem.textContent = value+": ";
@@ -50,7 +53,9 @@ function displayListItem(value, response){
       listLink.innerHTML = "live"
       listItem.appendChild(listLink);
       listItem.appendChild(listStatus);
+      listItem.setAttribute("sortOrder", 2);
       list.appendChild(listItem);
+      
       
     }
 }
@@ -76,10 +81,43 @@ function callAPI(domain,key,value,callBack){
     .then(function(response){
       // responseObjArray.push(response);
       callBack(value,response);
+      sortList();
       // console.log('Success:', response);
       return "final message";
     }
   );
   
+}
+
+function sortList() {
+  var list, i, switching, b, shouldSwitch;
+  list = document.getElementById("streamingList");
+  switching = true;
+  /* Make a loop that will continue until
+  no switching has been done: */
+  while (switching) {
+    // Start by saying: no switching is done:
+    switching = false;
+    b = list.getElementsByTagName("LI");
+    // Loop through all list items:
+    for (i = 0; i < (b.length - 1); i++) {
+      // Start by saying there should be no switching:
+      shouldSwitch = false;
+      /* Check if the next item should
+      switch place with the current item: */
+      if (b[i].getAttribute("sortOrder") < b[i + 1].getAttribute("sortOrder")) {
+        /* If next item is alphabetically lower than current item,
+        mark as a switch and break the loop: */
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      /* If a switch has been marked, make the switch
+      and mark the switch as done: */
+      b[i].parentNode.insertBefore(b[i + 1], b[i]);
+      switching = true;
+    }
+  }
 }
 
