@@ -7,6 +7,7 @@ h1{
     color: white;
 }
 li{
+    font-size:18px;
     text-align: center;
     list-style-type: none;
     margin: 20px;
@@ -15,4 +16,10 @@ li{
     padding:5px;
     margin-left: auto;
     margin-right: auto;
+}
+.inactive{
+    color:lightgrey;
+}
+p{
+    font-size:12px;
 }
