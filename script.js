@@ -1,70 +1,65 @@
+//declare variables
 var defaultUsers = ["dreamhackcs", "skyzhar", "freecodecamp", 
 "faceittv", "comster404", "brunofin", "terakilobyte", "robotcaleb",
 "sheevergaming", "esl_sc2", "ogamingsc2", "jacksofamerica"];
-var responseObjArray = [];
+// var responseObjArray = [];
 var acctStatusCheckArray = [];
 var domain = "https://api.twitch.tv/kraken/";
 
+//function to run on page load
 function onloadScript(){
+  
+  //loop thru each user name in the list
   for(i=0; i<defaultUsers.length; i++){
   callAPI(domain, "streams", defaultUsers[i], handler);
   }
 }
 
+//a list of functions to to called when API call is successful
 function handler(value, response){
-  pushValue(response);
+  // pushValue(response);
   displayListItem(value, response);
   callAPI(domain, "users", value, acctStatusChecker);
 }
 
-function acctStatusChecker(value,response){
-  acctStatusCheckArray.push(response);
-  if(response.error == "Not Found"){
-    var listItem = document.getElementById(value)
-    listItem.innerHTML = value +": account does not exist"
-    listItem.setAttribute("class","inactive");
-    listItem.setAttribute("sortOrder", 0);
-  } 
-  console.log("acctStatusCheckerObj: "+ response)
-}
+//store value to an array for debugging
+// function pushValue(value){
+//   responseObjArray.push(value);
+// }
 
-
+//diplay list data from API response on the DOM
 function displayListItem(value, response){
   var list = document.getElementById("streamingList")
-      var listItem = document.createElement("LI");
-      var listLink = document.createElement("A");
-      var listStatus = document.createElement("P");
+    var listItem = document.createElement("LI");
+    var listLink = document.createElement("A");
+    var listStatus = document.createElement("P");
+    
+    listItem.setAttribute("id",value);
+    
+    //check if stream is active
+    if(response.stream == null){
       
-      listItem.setAttribute("id",value);
-      
-   if(response.stream == null){
       listItem.textContent = value+": stream not active";
-      
-      // listLink.setAttribute("href", arrayToDisplay[i].display_name);
       listItem.appendChild(listLink);
-      listItem.setAttribute("sortOrder", 1);
+      listItem.setAttribute("sortOrder", 1); //set attribut for sorting
       list.appendChild(listItem);
       
-      // console.log("has value");
     }else{
+      
       listItem.textContent = value+": ";
       listLink.setAttribute("href", response.stream.channel.url);
       listStatus.innerHTML = response.stream.channel.status;
       listLink.innerHTML = "live"
       listItem.appendChild(listLink);
       listItem.appendChild(listStatus);
-      listItem.setAttribute("sortOrder", 2);
+      listItem.setAttribute("sortOrder", 2); // set attribute for sorting
       list.appendChild(listItem);
       
       
     }
 }
 
-
-function pushValue(value){
-  responseObjArray.push(value);
-}
-
+//make API call to twitch
 function callAPI(domain,key,value,callBack){
   
   var url = domain + key +"/"+value;
@@ -72,23 +67,37 @@ function callAPI(domain,key,value,callBack){
   
     fetch(url, {
     method: 'GET', // or 'PUT'
-  //body: JSON.stringify(data), // data can be `string` or {object}!
     headers:{
       'Client-ID': '9m474lggbg8veapiw06p8r6px3w832'
     }
   }).then(res => res.json())
     .catch(error => console.error('Error:', error))
     .then(function(response){
-      // responseObjArray.push(response);
       callBack(value,response);
       sortList();
       // console.log('Success:', response);
-      return "final message";
     }
   );
   
 }
 
+//function to check if a user exist
+function acctStatusChecker(value,response){
+  
+  //acctStatusCheckArray.push(response);
+  
+  if(response.error == "Not Found"){
+    var listItem = document.getElementById(value)
+    listItem.innerHTML = value +": account does not exist"
+    listItem.setAttribute("class","inactive");
+    listItem.setAttribute("sortOrder", 0);
+  } 
+  // console.log("acctStatusCheckerObj: "+ response)
+}
+
+//sort list to show live channgles first, 
+//inactive but existing users second, 
+//unregistered users last
 function sortList() {
   var list, i, switching, b, shouldSwitch;
   list = document.getElementById("streamingList");
