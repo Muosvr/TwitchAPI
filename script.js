@@ -34,7 +34,9 @@ function displayListItem(value, response){
     var listLink = document.createElement("A");
     var listStatus = document.createElement("P");
     
+    //set up elements
     listItem.setAttribute("id",value);
+    listLink.setAttribute("target","_blank");
     
     //check if stream is active
     if(response.stream == null){
