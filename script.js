@@ -7,47 +7,38 @@ var domain = "https://api.twitch.tv/kraken/";
 function onloadScript(){
 
   for(i=0; i<defaultUsers.length; i++){
-  callAPI(domain, "users", defaultUsers[i], handler);
+  callAPI(domain, "streams", defaultUsers[i], handler);
   }
 
 }
 
-function handler(response){
+function handler(value, response){
   pushValue(response);
-  displayListItem(response);
+  displayListItem(value, response);
 }
 
-function displayListItem(object){
+function displayListItem(value, response){
   var list = document.getElementById("streamingList")
-   if(object.error == undefined){
+   if(response.stream == null){
       var listItem = document.createElement("LI");
       var listLink = document.createElement("A");
-      listItem.textContent = object.display_name;
+      listItem.textContent = value+": stream not live";
       // listLink.setAttribute("href", arrayToDisplay[i].display_name);
       listItem.appendChild(listLink);
       list.appendChild(listItem);
       // console.log("has value");
     }else{
+      var listItem = document.createElement("LI");
+      var listLink = document.createElement("A");
+      // listItem.textContent = value+": stream live";
+      listLink.setAttribute("href", response.stream.channel.url);
+      listLink.textContent = value+": stream live"
+      listItem.appendChild(listLink);
+      list.appendChild(listItem);
       
     }
 }
 
-// function displayStreamingList(arrayToDisplay){
-//   var list = document.getElementById("streamingList")
-//   for (i=0; i<arrayToDisplay.length; i++){
-    
-//     if(arrayToDisplay[i].error == undefined){
-//       var listItem = document.createElement("LI");
-//       var listLink = document.createElement("A");
-//       listItem.textContent = arrayToDisplay[i].display_name;
-//       // listLink.setAttribute("href", arrayToDisplay[i].display_name);
-//       listItem.appendChild(listLink);
-//       list.appendChild(listItem);
-//       console.log("has value");
-//     }
-
-//   }
-// }
 
 function pushValue(value){
   responseObjArray.push(value);
@@ -68,8 +59,9 @@ function callAPI(domain,key,value,callBack){
     .catch(error => console.error('Error:', error))
     .then(function(response){
       // responseObjArray.push(response);
-      handler(response);
-      console.log('Success:', response); 
+      handler(value,response);
+      console.log('Success:', response);
+      return "final message";
     }
   );
   
