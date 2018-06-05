@@ -1,6 +1,7 @@
 body{
     margin:0;
-     background:white;   
+     background:white; 
+     font-family: 'Sunflower', sans-serif;
 }
 h1{
     text-align: center;
@@ -24,7 +25,7 @@ li{
     border: 5px solid #4b367c;
 }
 .inactive{
-    color:lightgrey;
+    color:grey;
 }
 p{
     font-size:12px;
