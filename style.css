@@ -11,19 +11,31 @@ h1{
     background: #4b367c;
     color: white;
 }
-li{
-    background:white;
-    font-size:18px;
+
+ul#streamingList {
+    margin-top: 50px;
+}
+
+li {
+    background: white;
+    font-size: 18px;
     text-align: center;
     list-style-type: none;
-    margin: 20px;
-    border: 2px solid black;
+    margin: 20px auto;
     width: 400px;
-    padding:5px;
-    margin-left: auto;
-    margin-right: auto;
-    border: 5px solid #4b367c;
+    border: 1px solid #efe8ff;
+    border-radius: 4px;
+    box-shadow: 1px 5px 15px #8f8f8f57;
+    transition: box-shadow 0.5s;
+    padding: 20px;
+    display: block;
 }
+
+li:hover {
+    box-shadow: 1px 1px 5px #8f8f8f57;
+    transition: box-shadow 0.5s;
+}
+
 .inactive{
     color:grey;
 }
